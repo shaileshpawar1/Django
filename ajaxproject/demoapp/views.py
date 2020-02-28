@@ -10,7 +10,7 @@ from .models import *
 
 # Create your views here.
 from rest_framework import generics
-from .serializers import *
+from .serializers import StudSerializers
 from .models import stud
 
 class StudView(generics.ListCreateAPIView):
@@ -24,5 +24,11 @@ class StudViewCrud(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'pk'
 
 def StudentView(request):
-    return render(request,"base.html")
+    if request.method == 'POST':
+        rno = request.POST.get("rno")
+        name = request.POST.get("name")
+        stud.objects.create(rno=rno,name=name)
+        return redirect("/")
+    else:
+        return render(request,"base.html")
 
