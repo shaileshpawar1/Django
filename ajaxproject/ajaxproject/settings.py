@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'demoapp' ,
     'rest_framework',
     ]
@@ -50,8 +51,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 ]
 
+AUTHENTICATION_BACKEND = ['django.contrib.auth.backend.ModelBackend', ]
 
 ROOT_URLCONF = 'ajaxproject.urls'
 
@@ -76,6 +79,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ajaxproject.wsgi.application'
 
+AUTH_USER_MODEL = 'demoapp.Account'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases

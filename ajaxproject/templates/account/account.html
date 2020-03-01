@@ -1,0 +1,34 @@
+{% extends 'base.html'%}
+{% block body%}
+<form class="form-signin" method="post">{% csrf_token %}
+
+    <h1 class="h3 mb-3 font-weight-normal">Account</h1>
+
+    <input autofocus class="form-control" id="inputEmail" name="email" placeholder="Email address" required type="email"
+           value={{account_form.initial.email}}>
+
+    <input class="form-control" id="inputUsername" name="username" placeholder="Username" required type="text"
+           value="{{account_form.initial.username}}">
+
+    {% for field in account_form %}
+    <p>
+        {% for error in field.errors %}
+    <p style="color: red">{{ error }}</p>
+    {% endfor %}
+    </p>
+    {% endfor %}
+    {% if account_form.non_field_errors %}
+    <div style="color: red">
+        <p>{{account_form.non_field_errors}}</p>
+    </div>
+
+    {% endif %}
+
+    {% if success_message %}
+    <p style="color:green; text-align: center;">{{success_message}}</p>
+    {% endif %}
+
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Save changes</button>
+
+</form>
+{% endblock %}

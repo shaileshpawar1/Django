@@ -16,16 +16,28 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-from django.conf import settings
-from django.conf.urls.static import static
 
 from demoapp import views
+from demoapp.views import (
+    registration_view,
+    logout_view,
+    login_view,
+    account_view,
+)
 
 urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),  # rest framework urls.py file include
     path('admin/', admin.site.urls),
-    path('', views.StudentView, name=''),
+    path('insert/', views.StudentView, name='insert'),
     path('stud-api', views.StudView.as_view(), name='stud-api'),
     path('stud-api<int:pk>', views.StudViewCrud.as_view(), name='stud-api'),
-   
+
+    # path('', home_screen_view, name="home"),
+    path('register/', registration_view, name="register"),
+    path('logout/', logout_view, name="logout"),
+    path('login/', login_view, name="login"),
+    path('', account_view, name="home"),
+
+    path('register/', registration_view, name='register'),
+
 ]
