@@ -23,6 +23,11 @@ from demoapp.views import (
     logout_view,
     login_view,
     account_view,
+
+    registration_view1,
+    logout_view1,
+    login_view1,
+    account_view1,
 )
 
 urlpatterns = [
@@ -36,8 +41,13 @@ urlpatterns = [
     path('register/', registration_view, name="register"),
     path('logout/', logout_view, name="logout"),
     path('login/', login_view, name="login"),
+    path('accounts/login/', login_view, name="login"),
     path('', account_view, name="home"),
 
-    path('register/', registration_view, name='register'),
+    path('home', account_view1, name="home1"),
+    path('register1/', registration_view1, name="register1"),
+    path('logout1/', logout_view1, name="logout1"),
+    path('login1/', login_view1, name="login1"),
+    path('accounts/login/', login_view1, name="login1"),
 
 ]

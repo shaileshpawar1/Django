@@ -6,6 +6,10 @@
     <title>Document</title>
 </head>
 <body>
+
+{% extends 'base.html'%}
+{% block login %}
+
 <style type="text/css">
   .form-signin {
   width: 100%;
@@ -48,19 +52,31 @@
 </style>
 
 
-<form class="form-signin" method="post">{% csrf_token %}
+<form autocomplete="on" class="form-signin" method="post">{% csrf_token %}
 
-    <h1 class="h3 mb-3 font-weight-normal">Register an account</h1>
+    <h1 class="font-weight-normal" style="color:skyblue">Register</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3">
 
-    <input autofocus class="form-control" id="inputEmail" name="email" placeholder="Email address" required
-           type="email">
+                <input autofocus class="form-control" id="inputEmail" name="email" placeholder="Email address" required
+                       type="email">
+            </div>
+            <div class="col-sm-3">
+                <input class="form-control" id="inputUsername" name="username" placeholder="Username" required
+                       type="text">
+            </div>
+            <div class="col-sm-3">
+                <input class="form-control" id="inputPassword1" name="password1" placeholder="Password" required
+                       type="password">
+            </div>
+            <div class="col-sm-3">
+                <input class="form-control" id="inputPassword2" name="password2" placeholder="Confirm password" required
+                       type="password">
+            </div>
+        </div>
+    </div>
 
-    <input class="form-control" id="inputUsername" name="username" placeholder="Username" required type="text">
-
-    <input class="form-control" id="inputPassword1" name="password1" placeholder="Password" required type="password">
-
-    <input class="form-control" id="inputPassword2" name="password2" placeholder="Confirm password" required
-           type="password">
 
     {% for field in registration_form %}
     <p>
@@ -76,8 +92,9 @@
 
     {% endif %}
 
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+    <button class="btn btn-success" type="submit">Register</button>
 
 </form>
+{% endblock%}
 </body>
 </html>

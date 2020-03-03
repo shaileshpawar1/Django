@@ -80,6 +80,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'ajaxproject.wsgi.application'
 
 AUTH_USER_MODEL = 'demoapp.Account'
+AUTH_USER_MODEL = 'demoapp.Account_C1'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases

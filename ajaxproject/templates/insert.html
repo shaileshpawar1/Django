@@ -1,4 +1,4 @@
-<html>
+<body>
 <head>
     <meta charset="utf-8"/>
     <title></title>
@@ -19,22 +19,21 @@
     </style>
 </head>
 <body>
+{% extends 'base.html'%}
+{% block body %}
 <form action="" id="reg-form" method="post">
-    <div
-            align="center"
-            class="main"
-            style="border: 1px solid black;
+    {% csrf_token %}
+    <div align="center" class="main" style="border: 1px solid black;
     margin: 25px 40px 75px 15px;
     padding: 25px 50px 50px 50px;
     height: auto;
     width: 98%;
-    background-color: grey;"
-    >
+    background-color: grey;">
         {% csrf_token %}
         <div class="row">
             <div class="col-sm-12">
                 <h1>DATA</h1>
-
+                <input id="id_tbl_row" type="text">
             </div>
         </div>
 
@@ -69,11 +68,13 @@
             </div>
             <div class="col-sm-8">
                 <button class="btn-success btn" type="submit">SUBMIT</button>
-                --- <input class="btn-success btn" onclick="return addData();" type="button" value="POST"/>
+                --- <input class="btn-success btn" onclick="return addData();" type="button" value="POST">
                 --- <input class="btn-success btn" name="update" onclick="return updateData();" type="button"
                            value="PATCH"/>
                 --- <input class="btn-success btn" name="update1" onclick="return updateDataPut();" type="button"
                            value="PUT"/>
+                --- <input class="btn-success btn" id="id_All_add" type="button" value="DUPLICATE">
+
                 --- <input class="btn-danger btn" name="delete" onclick="return deleteData();" type="button"
                            value="DELETE"/>
                 ---
@@ -135,15 +136,19 @@
           success: function(data) {
                 var SetDataToTable = "";
                 var sr_no = 1;
+
                 var num = 1;
                 for (var i = 0; i < data.length; i++) {
-                        SetDataToTable += "<tr id='tblrow-" + data[i].id + "'><th>" + sr_no + "</th><th class='brand'>" + data[i].id + "</th><th class='product'>" + data[i].rno + "</th><th class='matrics'>" + data[i].name + "</th><th><button type='button' value='edit' class='fas fa-edit btn btn-primary form-control' data-toggle='modal' data-target='#myModal2' onClick='editUser( " + data[i].id + ")'><i class='fa fa-icon'></i>edit</button></th><th><button type='button' value='delete' class='btn btn-danger form-control' onClick='deleteUser( " + data[i].id + ")'><i class='fas fa-trash-alt'></i>delete</button></th></tr>";
+                        SetDataToTable += "<tr id='tblrow-" + data[i].id + "' class='item'><th class='sr_no'>" + sr_no + "</th><th class='t_id'>" + data[i].id + "</th><th class='rno'>" + data[i].rno + "</th><th class='name'>" + data[i].name + "</th><th><button type='button' value='edit' class='fas fa-edit btn btn-primary form-control' data-toggle='modal' data-target='#myModal2' onClick='editUser( " + data[i].id + ")'><i class='fa fa-icon'></i>edit</button></th><th><button type='button' value='delete' class='btn btn-danger form-control' onClick='deleteUser( " + data[i].id + ")'><i class='fas fa-trash-alt'></i>delete</button></th></tr>";
                         sr_no = sr_no + 1;
+                 }
+                    document.getElementById('id_table_body').innerHTML = SetDataToTable;
+                    $("#id_tbl_row").val(sr_no-1)
                 }
-                document.getElementById('id_table_body').innerHTML = SetDataToTable;
-            }
+
         });
       }
+
 
 </script>
 
@@ -170,6 +175,7 @@
         $.ajax({
           url: '{% url "stud-api" %}'+ id, //add as per your id 
           type: "patch",
+          headers: { "X-CSRFToken": "{{ csrf_token }}" },
           data: {
             'name': $("#name").val()
           },
@@ -192,6 +198,7 @@
         $.ajax({
           url: '{% url "stud-api" %}'+ id, //add as per your id 
           type: "put",
+          headers: { "X-CSRFToken": "{{ csrf_token }}" },
           data: {
 
               'rno': $("#rno").val(),
@@ -212,6 +219,7 @@
         $.ajax({
           url: '{% url "stud-api" %}'+ id, //add as per your id 
           type: "delete",
+          headers: { "X-CSRFToken": "{{ csrf_token }}" },
           data: {
 
               'rno': $("#rno").val(),
@@ -257,6 +265,7 @@
         $.ajax({
           url: '{% url "stud-api" %}'+ id, //add as per your id 
           type: "delete",
+          headers: { "X-CSRFToken": "{{ csrf_token }}" },
           data: {
 
               'rno': $("#rno").val(),
@@ -338,6 +347,41 @@ $(function(){
 	});
 });
 
+
+</script>
+
+<script>
+    $("#id_All_add").click(function(){
+        var num = parseInt($("#id_tbl_row").val());
+
+        $("tr.item").each(function() {
+            $this = $(this);
+            var rno = $this.find(".rno").text();
+            var name = $this.find(".name").text();
+             saveData(rno,name);
+        });
+
+    });
+    function saveData1() {
+
+    }
+    function saveData(rno,name) {
+        $.ajax({
+          url: '{% url "stud-api" %}',
+          type: "POST",
+          headers: { "X-CSRFToken": "{{ csrf_token }}" },
+          data: {
+              'rno' : rno,
+              'name': name
+          },
+          dataType: "json",
+          success: function(data) {
+                      refresh();
+                      }
+        });
+      }
+
 </script>
 </body>
+{% endblock%}
 </html>

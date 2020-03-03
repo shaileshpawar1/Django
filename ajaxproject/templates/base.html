@@ -65,7 +65,7 @@ body, html {
     {% if request.user.is_authenticated %}
 
 
-    <a class="w3-bar-item w3-button" href="#home">{{request.user.username}}</a>
+    <a class="w3-bar-item w3-button" href="{% url 'home' %}">{{request.user.username}}</a>
     <a class="w3-bar-item w3-button" href="{% url 'logout' %}">logout</a>
 
     <a class="w3-bar-item w3-button w3-hide-small" href="#about"><i class="fa fa-user"></i> ABOUT</a>
@@ -73,7 +73,7 @@ body, html {
     <a class="w3-bar-item w3-button w3-hide-small" href="#contact"><i class="fa fa-envelope"></i> CONTACT</a>
     <a class="w3-bar-item w3-button w3-hide-small w3-right w3-hover-red" href="#">
       {% else%}
-      <a class="w3-bar-item w3-button" href="#home">HOME</a>
+        <a class="w3-bar-item w3-button" href="{% url 'home' %}">HOME</a>
       <a class="w3-bar-item w3-button" href="{% url 'register' %}">Register</a>
       <a class="w3-bar-item w3-button" href="{% url 'login' %}">Login</a>
 
@@ -92,6 +92,8 @@ body, html {
   </div>
 </div>
 
+{% block login %}
+
 <!-- First Parallax Image with Logo Text -->
 <div class="bgimg-1 w3-display-container w3-opacity-min" id="home">
   <div class="w3-display-middle" style="white-space:nowrap;">
@@ -99,19 +101,19 @@ body, html {
             class="w3-hide-small">WEBSITE</span> LOGO</span>
   </div>
 </div>
-
 <!-- Container (About Section) -->
 <div class="w3-content w3-container w3-padding-64" id="about">
-  {% block body %}
-  {% endblock %}
-  {% include 'insert.html'%}
-  <h3 class="w3-center">ABOUT ME</h3>
+    {% block body %}
+
+    {% endblock %}
+
+    <!--  include is used for the insert.html file  add in this page -->
+    <h3 class="w3-center">ABOUT ME</h3>
   <!--
     {% for text in form %}
       <p>{{text.email}}</p>
 
     {% endfor %} -->
-
   <p class="w3-center"><em>I love photography</em></p>
   <p>We have created a fictional "personal" website/blog, and our fictional character is a hobby photographer. Lorem
     ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
@@ -282,6 +284,7 @@ body, html {
     </div>
   </div>
 </div>
+{% endblock %}
 
 <!-- Footer -->
 <footer class="w3-center w3-black w3-padding-64 w3-opacity w3-hover-opacity-off">
