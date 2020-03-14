@@ -73,11 +73,13 @@ body, html {
     <a class="w3-bar-item w3-button w3-hide-small" href="#contact"><i class="fa fa-envelope"></i> CONTACT</a>
     <a class="w3-bar-item w3-button w3-hide-small w3-right w3-hover-red" href="#">
       {% else%}
-        <a class="w3-bar-item w3-button" href="{% url 'home' %}">HOME</a>
+      <a class="w3-bar-item w3-button" href="{% url 'home' %}">HOME</a>
       <a class="w3-bar-item w3-button" href="{% url 'register' %}">Register</a>
       <a class="w3-bar-item w3-button" href="{% url 'login' %}">Login</a>
 
       {% endif %}
+      <a class="w3-bar-item w3-button" href="{% url 'insert' %}">Add student Data</a>
+
 
       <i class="fa fa-search"></i>
     </a>
@@ -239,7 +241,7 @@ body, html {
   <span class="w3-button w3-large w3-black w3-display-topright" title="Close Modal Image"><i
           class="fa fa-remove"></i></span>
   <div class="w3-modal-content w3-animate-zoom w3-center w3-transparent w3-padding-64">
-    <img class="w3-image" id="img01">
+    <div class="w3-image" id="img01"></div>
     <p class="w3-opacity w3-large" id="caption"></p>
   </div>
 </div>

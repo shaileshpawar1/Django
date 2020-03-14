@@ -1,4 +1,5 @@
 from django.contrib.auth import login, logout
+from django.db.models import Max
 from django.shortcuts import render, redirect
 # Create your views here.
 from rest_framework import generics
@@ -6,7 +7,7 @@ from rest_framework import generics
 from .forms import *
 from .models import *
 from .serializers import StudSerializers
-
+from django.contrib.auth.decorators import login_required
 
 class StudView(generics.ListCreateAPIView):
     queryset = stud.objects.all()
@@ -19,15 +20,23 @@ class StudViewCrud(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'pk'
 
 
-
+@login_required
 def StudentView(request):
+    context = {}
     if request.method == 'POST':
         rno = request.POST.get("rno")
         name = request.POST.get("name")
-        stud.objects.create(rno=rno, name=name)
-        return redirect("/")
-    else:
-        return render(request, "insert.html")
+        img = request.FILES["img"]
+        stud.objects.create(rno=rno, name=name, img=img)
+        return redirect("/insert")
+    if request.method == 'GET':
+        maxid = stud.objects.aggregate(Max('id'))
+        if maxid['id__max'] == None:
+            maxid['id__max'] = 0
+        num = maxid['id__max']
+        num = num + 1
+        context['id'] = num
+        return render(request, "insert.html", context)
 
 
 def home_view(request):
@@ -76,18 +85,17 @@ def login_view(request):
             password = request.POST['password']
             user = authenticate(email=email, password=password)
             login(request, user)
-
+            print("if next")
             if user:
                 if 'next' in request.POST:
-                    print("next post")
-                    return redirect("/insert/")
+                    return redirect(request.POST.get('next'))
                 else:
-                    print("next /")
+                    print("post/")
+                    print(request.POST.get('next'))
                     return redirect("/")
 
     else:
         form = AccountAuthenticationForm()
-
     context['login_form'] = form
     print('form')
     return render(request, "account/login.html", context)
