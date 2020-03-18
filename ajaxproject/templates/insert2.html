@@ -1,0 +1,548 @@
+<html>
+
+<head>
+    <meta charset="utf-8"/>
+    <title></title>
+    <link
+            crossorigin="anonymous"
+            href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+            integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+            rel="stylesheet"
+    />
+
+
+    <style type="text/css">
+      .error{
+        color: red;
+        font-style: italic;
+      }
+
+
+    </style>
+</head>
+<body>
+{% extends 'base.html'%}
+{% block body %}
+
+<style>
+            input[type=text]{
+
+            }
+            .btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+#img-upload{
+    width: 40%;
+}
+
+
+</style>
+<form action="" id="reg-form" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div align="center" class="main" style="border: 1px solid black;
+    margin: 0% 40px 75px 15px;
+    padding: 25px 50px 50px 50px;
+    height: auto;
+    width: 98%;
+    background-color: lightblue;
+    ">
+
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-sm-12">
+                <h1> 2nd Record ID</h1>
+
+                <input readonly type="text" value="{{ id }}">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4"><h1>DATA</h1>
+                <input id="id_tbl_row" type="text"></div>
+            <div class="col-md-4"><img style="border: 1px solid black;" id='img-upload' src=""/></div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <label>id :</label>
+            </div>
+            <div class="col-sm-4">
+                <input class="form-control" id="id" name="id" type="text"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <label>Roll No:</label>
+            </div>
+            <div class="col-sm-4">
+                <input class="form-control" id="rno" name="rno" type="text"/>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-sm-4">
+                <label>name :</label>
+            </div>
+            <div class="col-sm-4">
+                <input class="form-control" id="name" name="name" type="text"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <label>Image :</label>
+            </div>
+
+            <div class="container">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Upload Image</label>
+                        <div class="input-group">
+            <span class="input-group-btn">
+                <span class="btn btn-default btn-file">
+                    Browse… <input type="file" name="img" id="imgInp">
+                </span>
+            </span>
+                            <input type="text" class="form-control" readonly>
+
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="col-sm-4">
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2">
+            </div>
+            <div class="col-sm-8">
+                <button class="btn-success btn" type="submit">SUBMIT</button>
+                --- <input class="btn-success btn" onclick="return addData();" type="button" value="POST">
+                --- <input class="btn-success btn" onclick="return addFormData();" type="button" value="POSTBYFORM">
+                --- <input class="btn-success btn" name="update" onclick="return updateData();" type="button"
+                           value="PATCH"/>
+                --- <input class="btn-success btn" name="update1" onclick="return updateDataPut();" type="button"
+                           value="PUT"/>
+                --- <input class="btn-success btn" id="id_All_add" type="button" value="DUPLICATE">
+
+                --- <input class="btn-danger btn" name="delete" onclick="return deleteData();" type="button"
+                           value="DELETE"/>
+                ---
+                <button class="btn-danger btn" type="reset">RESET</button>
+
+            </div>
+            <div class="col-sm-2">
+
+            </div>
+        </div>
+        <br/><br/>
+    </div>
+</form>
+
+
+<div class="container" style="overflow-x:auto;">
+    <h2>Added DATA in table</h2>
+    <p></p>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Sr. NO.</th>
+
+            <th>database table id</th>
+
+            <th>Roll no</th>
+            <th>Name</th>
+
+            <th>Edit</th>
+
+            <th>Delete</th>
+
+        </tr>
+        </thead>
+        <tbody id="id_table_body">
+
+
+        </tbody>
+    </table>
+</div>
+
+
+{% block content %} {% endblock %}
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+{% block javascript %} {% endblock %}
+
+<script>
+    $(document).ready( function() {
+    	$(document).on('change', '.btn-file :file', function() {
+		var input = $(this),
+			label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+		input.trigger('fileselect', [label]);
+		});
+
+		$('.btn-file :file').on('fileselect', function(event, label) {
+
+		    var input = $(this).parents('.input-group').find(':text'),
+		        log = label;
+
+		    if( input.length ) {
+		        input.val(log);
+		    } else {
+		        if( log ) alert(log);
+		    }
+
+		});
+		function readURL(input) {
+		    if (input.files && input.files[0]) {
+		        var reader = new FileReader();
+
+		        reader.onload = function (e) {
+		            $('#img-upload').attr('src', e.target.result);
+		        }
+
+		        reader.readAsDataURL(input.files[0]);
+		    }
+		}
+
+		$("#imgInp").change(function(){
+		    readURL(this);
+		});
+	});
+
+
+</script>
+<script>
+      $(document).ready(function() {
+        refresh();
+      });
+      function refresh(){
+        $.ajax({
+          url: '{% url "stud-api" %}',
+
+          data: {},
+          dataType: "json",
+          success: function(data) {
+                var SetDataToTable = "";
+                var sr_no = 1;
+
+                var num = 1;
+                for (var i = 0; i < data.length; i++) {
+                        SetDataToTable += "<tr id='tblrow-" + data[i].id + "' class='item'><th class='sr_no'>" + sr_no + "</th><th class='t_id'>" + data[i].id + "</th><th class='rno'>" + data[i].rno + "</th><th class='name'>" + data[i].name + "</th><th><button type='button' value='edit' class='fas fa-edit btn btn-primary form-control' data-toggle='modal' data-target='#myModal2' onClick='editUser( " + data[i].id + ")'><i class='fa fa-icon'></i>edit</button></th><th><button type='button' value='delete' class='btn btn-danger form-control' onClick='deleteUser( " + data[i].id + ")'><i class='fas fa-trash-alt'></i>delete</button></th></tr>";
+                        sr_no = sr_no + 1;
+                 }
+                    document.getElementById('id_table_body').innerHTML = SetDataToTable;
+                    $("#id_tbl_row").val(sr_no-1)
+                }
+
+        });
+      }
+
+
+
+</script>
+<script>
+
+
+$('#id_form').submit(function(e) {
+        var formData = new FormData($(this));
+        formData.append('img', $('#img')[0].files[0]);
+        var action = function(d){
+        console.log(d);
+        }
+        $.ajax({
+             url: '{% url "stud-api" %}',
+            type: "POST",
+            data: formData,
+            headers: {'Authorization': 'Token mytoken'},
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function() { alert('it works') },
+            error: action,
+        });
+        e.preventDefault();
+    });
+
+      function addData() {
+        $.ajax({
+          url: '{% url "stud-api" %}',
+          type: "POST",
+          headers: { "X-CSRFToken": "{{ csrf_token }}" },
+          data: {
+              'rno' : $("#rno").val(),
+              'name': $("#name").val()
+          },
+          dataType: "json",
+          success: function(data) {
+            console.log(data);
+            refresh();
+          }
+        });
+      }
+
+      function updateData() {
+        var id =parseInt($("#id").val());
+        $.ajax({
+          url: '{% url "stud-api" %}'+ id, //add as per your id
+          type: "patch",
+          headers: { "X-CSRFToken": "{{ csrf_token }}" },
+          data: {
+            'name': $("#name").val()
+          },
+          success: function(data) {
+            console.log(data);
+            refresh();
+        },
+          dataType: "json",
+          error: function(data) {
+            console.log(data);
+          }
+        });
+      }
+
+
+</script>
+<script>
+
+    function updateDataPut() {
+        var id =parseInt($("#id").val());
+        $.ajax({
+          url: '{% url "stud-api" %}'+ id, //add as per your id
+          type: "put",
+          headers: { "X-CSRFToken": "{{ csrf_token }}" },
+          data: {
+
+              'rno': $("#rno").val(),
+            'name': $("#name").val()
+          },
+          success: function(data) {
+            console.log(data);
+            refresh();
+        },
+          dataType: "json",
+          error: function(data) {
+            console.log(data);
+          }
+        });
+      }
+      function deleteData() {
+        var id =parseInt($("#id").val());
+        $.ajax({
+          url: '{% url "stud-api" %}'+ id, //add as per your id
+          type: "delete",
+          headers: { "X-CSRFToken": "{{ csrf_token }}" },
+          data: {
+
+              'rno': $("#rno").val(),
+            'name': $("#name").val()
+          },
+          success: function(data) {
+            console.log(data);
+            refresh();
+        },
+          dataType: "json",
+          error: function(data) {
+            console.log(data);
+          }
+        });
+      }
+
+
+
+</script>
+
+<script>
+  function editUser(id) {
+        var id =parseInt(id);
+        console.log(id);
+        $.ajax({
+          url: '{% url "stud-api" %}'+ id, //add as per your id
+          type: "GET",
+          data: {},
+          success: function(data) {
+            console.log(data);
+
+                  $("#id").val(data.id);
+                  $("#rno").val(data.rno);
+                  $("#name").val(data.name);
+        },
+          dataType: "json",
+          error: function(data) {
+            console.log(data);
+          }
+        });
+      }
+  function deleteUser(id) {
+        var id =parseInt(id);
+        $.ajax({
+          url: '{% url "stud-api" %}'+ id, //add as per your id
+          type: "delete",
+          headers: { "X-CSRFToken": "{{ csrf_token }}" },
+          data: {
+
+              'rno': $("#rno").val(),
+            'name': $("#name").val()
+          },
+          success: function(data) {
+            console.log(data);
+            refresh();
+        },
+          dataType: "json",
+          error: function(data) {
+            console.log(data);
+          }
+        });
+      }
+
+
+</script>
+
+
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/jquery.validate.js
+"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/jquery.validate.min.js
+"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/additional-methods.min.js
+"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/additional-methods.js
+"></script>
+
+<script>
+  $(document).ready(function(){
+$(function(){
+		$.validator.addMethod('name_validate',function(value,element){
+			return this.optional(element) || value.length >= 2 && value.length <= 15 && /[a-z]/i.test(value);
+		},'enter valid Name'),
+
+		$.validator.addMethod('id_validate',function(value,element){
+			return this.optional(element) || value.length <=3  && /[0-9]/.test(value);
+    },'enter valid Roll no '),
+
+		$.validator.addMethod('rno_validate',function(value,element){
+			return this.optional(element) || value.length <=3  && /[0-9]/.test(value);
+		},'enter valid Roll no ')
+
+
+		$("#reg-form").validate({
+			rules:{
+				rno:{
+          required:true,
+          rno_validate:true
+				},
+				name:{
+          required:true,
+          name_validate:true
+
+				},
+				id:{
+					id_validate:true
+				}
+
+			},
+			messages:{
+				rno:{
+					required:'plz enter Roll no',
+
+        },
+        name:{
+					required:'plz enter Name',
+
+				},
+				id:{
+					required:'plz enter ',
+
+				}
+			}
+
+		});
+
+	});
+});
+
+
+
+</script>
+
+<script>
+    $("#id_All_add").click(function(){
+        var num = parseInt($("#id_tbl_row").val());
+
+        $("tr.item").each(function() {
+            $this = $(this);
+            var rno = $this.find(".rno").text();
+            var name = $this.find(".name").text();
+             saveData(rno,name);
+        });
+
+    });
+    function saveData1() {
+
+    }
+    function saveData(rno,name) {
+        $.ajax({
+          url: '{% url "stud-api" %}',
+          type: "POST",
+          headers: { "X-CSRFToken": "{{ csrf_token }}" },
+          data: {
+              'rno' : rno,
+              'name': name
+          },
+          dataType: "json",
+          success: function(data) {
+                      refresh();
+                      }
+        });
+      }
+
+
+
+</script>
+<script>
+
+    function addFormData(){
+
+    alert("hi");
+    $.ajax({
+          url: '{% url "stud-api" %}',
+          type: "POST",
+          //headers: { "X-CSRFToken": "{{ csrf_token }}" },//don't no need to implement or not headers
+          data: $("form").serialize(),
+          dataType: "json",
+          success: function(data) {
+                      refresh();
+                      }
+        });
+    }
+
+</script>
+
+{% endblock%}
+</body>
+</html>

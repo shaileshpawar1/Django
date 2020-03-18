@@ -1,5 +1,6 @@
 from django.contrib.auth import login, logout
 from django.db.models import Max
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 # Create your views here.
 from rest_framework import generics
@@ -37,6 +38,26 @@ def StudentView(request):
         num = num + 1
         context['id'] = num
         return render(request, "insert.html", context)
+
+
+@login_required
+def StudentView1(request):
+    context = {}
+    if request.method == 'POST':
+        # rno = request.POST.get("rno")
+        # name = request.POST.get("name")
+        # img = request.FILES["img"]
+        # stud.objects.create(rno=rno, name=name, img=img)
+        # return redirect("/insert")
+        return HttpResponse("hii")
+    if request.method == 'GET':
+        maxid = stud.objects.aggregate(Max('id'))
+        if maxid['id__max'] == None:
+            maxid['id__max'] = 0
+        num = maxid['id__max']
+        num = num + 1
+        context['id'] = num
+        return render(request, "insert2.html", context)
 
 
 def home_view(request):

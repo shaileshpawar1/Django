@@ -34,6 +34,7 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),  # rest framework urls.py file include
     path('admin/', admin.site.urls),
     path('insert/', views.StudentView, name='insert'),
+    path('insert1/', views.StudentView1, name='insert1'),
     path('stud-api', views.StudView.as_view(), name='stud-api'),
     path('stud-api<int:pk>', views.StudViewCrud.as_view(), name='stud-api'),
 
